@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1634170461 source:/home/andrey/coding/Stack/main.cpp
+	"verificator.h"
+	"stack.h"
+	"unit_tests.h"
+
+1634169218 /home/andrey/coding/Stack/verificator.h
+	<stdio.h>
+	<assert.h>
+	"stack.h"
+
+1634170482 source:/home/andrey/coding/Stack/verificator.cpp
+	"verificator.h"
+
+1633875783 source:/home/andrey/coding/Stack/log.cpp
+	<stdio.h>
+	"stack.h"
+	"log.h"
+
+1634131236 /home/andrey/coding/Stack/stack.h
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<typeinfo>
+
+1634138136 source:/home/andrey/coding/Stack/stack.cpp
+	"stack.h"
+	"verificator.h"
+
+1633876073 /home/andrey/coding/Stack/log.h
+
+1633892293 source:/home/andrey/coding/Stack/dump.cpp
+	<stdio.h>
+	"stack.h"
+	"dump.h"
+
+1633893659 /home/andrey/coding/Stack/dump.h
+
+1634131757 /home/andrey/coding/Stack/unit_tests.h
+	"stack.h"
+
+1634135301 source:/home/andrey/coding/Stack/unit_tests.cpp
+	"stack.h"
+	"verificator.h"
+

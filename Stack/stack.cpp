@@ -1,23 +1,28 @@
 #include "stack.h"
 #include "verificator.h"
 
+static void ResizeStackUp (Stack *st);
+
 void InitStack (Stack *st) {
-    ASSERT_OK(st->capacity > 0 || st->sizeOfStack > 0, st, RECREATING_STACK, return;);
+    if (st == nullptr) {
+        Dump (st, DATA, NULL_PTR_TO_STACK);
+    }
+    ASSERT_OK (st->capacity > 0 || st->sizeOfStack > 0, st, RECREATING_STACK, return;);
 
     st->capacity = INIT_SIZE;
     st->sizeOfStack = 0;
 
-    st->data = (DATA*)calloc (INIT_SIZE + NUMBOFCANARIES * sizeof(CANARY_DATA_LEFT) , sizeof(DATA));
+    st->data = (DATA*)calloc (INIT_SIZE + NUMBOFCANARIES * sizeof (CANARY_DATA_LEFT), sizeof (DATA));
 
-    void *ptr = (void*)((char*)st->data + (st->capacity) * sizeof(DATA) + sizeof (CANARY_DATA_LEFT));
-    ptr = memcpy (ptr, (const void*)(&CANARY_DATA_RIGHT), sizeof(CANARY_DATA_RIGHT));
-    ASSERT_OK(ptr == nullptr, st, ALLOC_FAULT, ;);
+    void *ptr = (void*) ((char*)st->data + (st->capacity) * sizeof (DATA) + sizeof (CANARY_DATA_LEFT));
+    ptr = memcpy (ptr, (const void*) (&CANARY_DATA_RIGHT), sizeof (CANARY_DATA_RIGHT));
+    ASSERT_OK (ptr == nullptr, st, ALLOC_FAULT, ;);
 
     ptr = (void*)st->data;
     ptr = memcpy(ptr, (const void*)(&CANARY_DATA_LEFT), sizeof(CANARY_DATA_LEFT));
     ASSERT_OK(ptr == nullptr, st, ALLOC_FAULT, ;);
 
-    st->data += sizeof(CANARY_DATA_LEFT) / sizeof (DATA);
+    st->data = (DATA*) ((char*)st->data + sizeof(CANARY_DATA_LEFT));
 
     st->hashStack = MurmurHash2 (st);
 
@@ -52,15 +57,15 @@ static void ResizeStackUp (Stack *st) {
 
     st->capacity = 2 * st->capacity + 1;
 
-    void *Ptr = realloc ((void*)(st->data - sizeof(CANARY_DATA_LEFT) / sizeof (DATA)), st->capacity * sizeof (DATA)
-                          + sizeof (CANARY_DATA_LEFT) + sizeof (CANARY_DATA_RIGHT));
+    void *Ptr = realloc ((void*)(st->data - sizeof(CANARY_DATA_LEFT) / sizeof (DATA)),
+                         st->capacity * sizeof (DATA) + sizeof (CANARY_DATA_LEFT) + sizeof (CANARY_DATA_RIGHT));
     ASSERT_OK(Ptr == nullptr, st, ALLOC_FAULT, ;);
     st->data = (DATA*)Ptr;
 
-    st->data = st->data + sizeof (CANARY_DATA_LEFT) / sizeof (DATA);
+    st->data = (DATA*) ((char*)st->data + sizeof (CANARY_DATA_LEFT)) ;
 
     void *ptr = ((char*)st->data + st->capacity * sizeof (DATA));
-    ptr = memcpy (ptr, (const void*)(&CANARY_DATA_RIGHT), sizeof (CANARY_DATA_RIGHT));
+    ptr = memcpy (ptr, (const void*) (&CANARY_DATA_RIGHT), sizeof (CANARY_DATA_RIGHT));
     ASSERT_OK(ptr == nullptr, st, ALLOC_FAULT, ;);
 
     st->hashStack = MurmurHash2 (st);
@@ -133,7 +138,7 @@ void ResizeStackDown (Stack *st) {
     ASSERT_OK(Ptr == nullptr, st, ALLOC_FAULT, ;);
     st->data = (DATA*)Ptr;
 
-    st->data = st->data + sizeof (CANARY_DATA_LEFT) / sizeof (DATA);
+    st->data = (DATA *) ((char*)st->data + sizeof (CANARY_DATA_LEFT));
 
     void *ptr = ((char*)st->data + st->capacity * sizeof (DATA));
     ptr = memcpy (ptr, (const void*)(&CANARY_DATA_RIGHT), sizeof (CANARY_DATA_RIGHT));
